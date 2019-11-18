@@ -8,10 +8,12 @@ import android.widget.EditText
 import android.widget.Toast
 import com.heejong.githubAPI_kotlin.network.APIClient
 import com.heejong.githubAPI_kotlin.network.APIInterface
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
     var inputUser: EditText = findViewById(R.id.inputText)
-    var url = "https://api.github.com/users/"
+    var url = "https://api.github.com/"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,10 +29,27 @@ class MainActivity : AppCompatActivity() {
         val returnstr = checkInputText()
         if(!returnstr.isEmpty()) {
             //start connect
-            url = url+returnstr
-            Log.e("HJHJ", "url :"+url)
-//            APIClient.getClient(url).
-            //start next activity
+            val adapter = APIClient.getInstance()
+            adapter.requestContributors(returnstr)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnError {
+                    Toast.makeText(this, "doOnError", Toast.LENGTH_SHORT).show()
+                    Log.d("HJHJ", "doOnError")
+                }
+                .unsubscribeOn(Schedulers.io())
+                .onErrorReturn { t: Throwable ->
+                    Log.d("HJHJ", "onErrorReturn : " + t.message)
+                    arrayOf(getGithubInfomation())
+                }
+                .subscribe { result ->
+                    if ("User" == result[0].gettype()) { // NULL이 안옴
+                        Toast.makeText(this, "Good", Toast.LENGTH_SHORT).show()
+                        Log.d("HJHJ", "subscribe good")
+                    } else {
+                        Log.d("HJHJ", "subscribe bad")
+                    }
+                }
 
         }else {
             Toast.makeText(this, " please enter your USERID", Toast.LENGTH_SHORT).show()

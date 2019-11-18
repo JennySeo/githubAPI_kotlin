@@ -3,38 +3,40 @@ package com.heejong.githubAPI_kotlin.network
 import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
-
+import java.util.concurrent.TimeUnit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 
 internal object APIClient {
 
-    private var retrofit: Retrofit? = null
-
-
-    fun getClient(url: String): Retrofit? {
-        var url = url
-
-
-        if (retrofit == null) {
-            val interceptor = HttpLoggingInterceptor()
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-            if (!url.startsWith("https://")) {
-                url = "https://$url"
-            }
-
-            retrofit = Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(OkHttpClient.Builder().addInterceptor(interceptor).build())
-                .build()
-        }
-
-        return retrofit
+    val CONNECT_TIMEOUT: Long = 15
+    val WRITE_TIMEOUT: Long = 15
+    val READ_TIMEOUT: Long = 15
+    val API_URL: String = "https://api.github.com/"
+    var mOKHttpClient: OkHttpClient
+    var mRetrofit: Retrofit
+    var mKotlinRetrofitInterface: APIInterface
+    init {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        mOKHttpClient = OkHttpClient().newBuilder().apply {
+            addInterceptor(httpLoggingInterceptor)
+            connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+            readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+        }.build()
+        mRetrofit = Retrofit.Builder().apply {
+            baseUrl(API_URL)
+            client(mOKHttpClient)
+            addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            addConverterFactory(GsonConverterFactory.create())
+        }.build()
+        mKotlinRetrofitInterface = mRetrofit.create()
     }
+    fun getInstance(): APIInterface {
+        return this.mKotlinRetrofitInterface
+    }
+
 
 }
