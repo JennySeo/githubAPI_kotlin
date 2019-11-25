@@ -3,6 +3,7 @@ package com.heejong.githubAPI_kotlin
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -12,21 +13,25 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
-    var inputUser: EditText = findViewById(R.id.inputText)
+
     var url = "https://api.github.com/"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button: Button = findViewById(R.id.button)
-        button.setOnClickListener{ btnlistner() }
+        findViewById<Button>(R.id.button).setOnClickListener {
+            btnlistner(it)
+        }
 
-        inputUser.setOnClickListener{ inputUserlistner() }
+        findViewById<EditText>(R.id.inputText).setOnClickListener {
+            inputUserlistner(it)
+        }
+
 
     }
-    private fun btnlistner(){
+    private fun btnlistner(view : View){
         Toast.makeText(this, "btton click ! ",Toast.LENGTH_SHORT).show()
-        val returnstr = checkInputText()
+        val returnstr = checkInputText(view)
         if(!returnstr.isEmpty()) {
             //start connect
             val adapter = APIClient.getInstance()
@@ -56,11 +61,11 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    private fun inputUserlistner(){
+    private fun inputUserlistner(view : View){
 
     }
-    private fun checkInputText(): String {
-        val str =inputUser.text.toString()
+    private fun checkInputText(view : View): String {
+        val str =""
         return str
     }
 
