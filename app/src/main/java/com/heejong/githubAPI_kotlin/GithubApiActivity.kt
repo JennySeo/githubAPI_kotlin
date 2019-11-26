@@ -23,6 +23,7 @@ class GithubApiActivity : AppCompatActivity() {
         setContentView(R.layout.activity_githubapi)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+        toolbar.title = "JennySeo"
 
         val fab: FloatingActionButton = findViewById(R.id.fab)
         fab.setOnClickListener { view ->
