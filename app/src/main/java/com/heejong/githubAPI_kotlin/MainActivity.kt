@@ -1,5 +1,6 @@
 package com.heejong.githubAPI_kotlin
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,9 +16,10 @@ import io.reactivex.schedulers.Schedulers
 
 class MainActivity : AppCompatActivity() {
 
-    var url : String = "https://api.github.com/"
+    var url: String = "https://api.github.com/"
     var userName = ""
-    var mEditText : EditText? = null
+    var mEditText: EditText? = null
+    val adapter =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,25 +34,37 @@ class MainActivity : AppCompatActivity() {
 //        mEditText.setOnClickListener()
 
 
+
     }
-    private fun btnlistner(view : View){
-        Toast.makeText(this, "btton click ! ",Toast.LENGTH_SHORT).show()
-        val returnstr = checkInputText(view)
-        if(!returnstr.isEmpty()) {
+    @SuppressLint("CheckResult")
+    private fun btnlistner(view: View) {
+        Toast.makeText(this, "btton click ! ", Toast.LENGTH_SHORT).show()
+        val returnstr = "JennySeo"//checkInputText(view)
+        if (!returnstr.isEmpty()) {
             //start connect
             val adapter = APIClient.getInstance()
-//            adapter.requestContributors(url+returnstr)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.io())
-//                .doOnError {
-//                    Toast.makeText(this, "doOnError", Toast.LENGTH_SHORT).show()
-//                    Log.d("HJHJ", "doOnError")
+            adapter.requestContributors("JennySeo")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnError {
+                    Toast.makeText(this, "doOnError", Toast.LENGTH_SHORT).show()
+                    Log.d("HJHJ", "doOnError")
+                }
+                .unsubscribeOn(Schedulers.io())
+//                .onErrorReturn { t: Throwable ->
+//                    Log.d("HJHJ", "onErrorReturn : " + t.message)
+////                    getGithubInfomation()
 //                }
-//                .unsubscribeOn(Schedulers.io())
-//                .subscribe { result ->
-//                    if ("User" == result[0].gettype()) { // NULL이 안옴
+                .subscribe { result ->
+                    if (result.getid()!=null) {// NULL이 안옴
                         Toast.makeText(this, "Good", Toast.LENGTH_SHORT).show()
                         Log.d("HJHJ", "subscribe good")
+                        Log.d("HJHJ", "getcompany : " +result.getcompany())
+                        Log.d("HJHJ", "gettype : " +result.gettype())
+                        Log.d("HJHJ", "getlocation : " +result.getlocation())
+                        Log.d("HJHJ", "getType : " +result.gettype())
+                        Log.d("HJHJ", "getpublic_repos : " +result.getpublic_repos())
+                        Log.d("HJHJ", "get_following : " +result.get_following())
                         val nextIntent = Intent(this, GithubApiActivity::class.java)
                         startActivity(nextIntent)
 //                    } else {
@@ -58,21 +72,22 @@ class MainActivity : AppCompatActivity() {
 //                    }
 //                }
 
-        }else {
-            Toast.makeText(this, " please enter your USERID", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, " please enter your USERID", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+//    private fun inputUserlistner(view : View){
+//
+//    }
+//    private fun checkInputText(view : View): String {
+//        val str ="JennySeo"
+//        return str
+//    }
+
         }
-
     }
-    private fun inputUserlistner(view : View){
-
-    }
-    private fun checkInputText(view : View): String {
-        val str ="JennySeo"
-        return str
-    }
-
 }
-
-private fun EditText.setOnClickListener() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-}
+//private fun EditText.setOnClickListener() {
+//    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//}

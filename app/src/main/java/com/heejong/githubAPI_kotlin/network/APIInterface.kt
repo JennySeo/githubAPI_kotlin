@@ -10,9 +10,9 @@ import io.reactivex.Single
 
 
 internal interface APIInterface {
-    @GET("users/{owner}")
+    @GET("users/{username}")
     fun requestContributors(
-        @Path("owner")owner:String
-        ) : Single<Array<getGithubInfomation>>
+        @Path("username") userName:String
+        ) : Single<getGithubInfomation>
 
 }
