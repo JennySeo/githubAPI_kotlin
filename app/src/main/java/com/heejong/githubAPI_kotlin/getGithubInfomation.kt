@@ -50,7 +50,7 @@ class getGithubInfomation {
 
 
     @Expose
-    var starred_url : String ? = null
+    var starred_url : String  ?= null
     @SerializedName("starred_url")
 
     @Expose
@@ -143,8 +143,17 @@ class getGithubInfomation {
     var updated_at : String ? = null
     @SerializedName("updated_at")
 
+    @Expose
+    var login : String ? = null
+    @SerializedName("login")
 
 
+    fun getlogin(): String?  {
+         return login
+    }
+    fun setlogin(login: String) {
+        this.login = login
+    }
     fun getid(): String? {
         return id
     }

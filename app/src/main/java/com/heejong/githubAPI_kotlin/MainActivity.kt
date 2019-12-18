@@ -42,41 +42,9 @@ class MainActivity : AppCompatActivity() {
         val returnstr = "JennySeo"//checkInputText(view)
         if (!returnstr.isEmpty()) {
             //start connect
-            val adapter = APIClient.getInstance()
-            adapter.requestContributors("JennySeo")
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .doOnError {
-                    Toast.makeText(this, "doOnError", Toast.LENGTH_SHORT).show()
-                    Log.d("HJHJ", "doOnError")
-                }
-                .unsubscribeOn(Schedulers.io())
-//                .onErrorReturn { t: Throwable ->
-//                    Log.d("HJHJ", "onErrorReturn : " + t.message)
-////                    getGithubInfomation()
-//                }
-                .subscribe { result ->
-                    if (result.getid()!=null) {// NULL이 안옴
-                        Toast.makeText(this, "Good", Toast.LENGTH_SHORT).show()
-                        Log.d("HJHJ", "subscribe good")
-                        Log.d("HJHJ", "getcompany : " +result.getcompany())
-                        Log.d("HJHJ", "gettype : " +result.gettype())
-                        Log.d("HJHJ", "getlocation : " +result.getlocation())
-                        Log.d("HJHJ", "getType : " +result.gettype())
-                        Log.d("HJHJ", "getpublic_repos : " +result.getpublic_repos())
-                        Log.d("HJHJ", "get_following : " +result.get_following())
-                        val nextIntent = Intent(this, GithubApiActivity::class.java)
-                        startActivity(nextIntent)
-//                    } else {
-//                        Log.d("HJHJ", "subscribe bad")
-//                    }
-//                }
-
-                    } else {
-                        Toast.makeText(this, " please enter your USERID", Toast.LENGTH_SHORT).show()
-                    }
-
-                }
+            Toast.makeText(this.applicationContext,returnstr ,Toast.LENGTH_SHORT)
+            val nextIntent = Intent(this, GithubApiActivity::class.java)
+            startActivity(nextIntent)
 //    private fun inputUserlistner(view : View){
 //
 //    }
